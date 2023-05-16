@@ -196,12 +196,22 @@ namespace Quanlyphongkham
         }
         private void btnthemdv_Click(object sender, EventArgs e)
         {
-            // kiểm tra các textbox có dữ liệu không
+            // Kiểm tra các textbox có dữ liệu không
             if (tbxmadv.Text != "" && tbxtendichvu.Text != "" && tbxgiadichvu.Text != "")
             {
-                try // kiểm tra ngoại lệ
+                try // Kiểm tra ngoại lệ
                 {
-                    int dongia = Convert.ToInt32(tbxgiadichvu.Text); // chuyển đổi kiểu dữ liệu của textbox giá dịch vụ sang int
+                    // Kiểm tra mã dịch vụ
+                    string maDichVu = tbxmadv.Text.Trim();
+                    Regex maDichVuRegex = new Regex("^D\\d+$");
+                    if (!maDichVuRegex.IsMatch(maDichVu))
+                    {
+                        MessageBox.Show("Mã dịch vụ không hợp lệ. Mã dịch vụ phải bắt đầu bằng chữ 'D' và theo sau là các số nguyên dương.");
+                        tbxmadv.Focus();
+                        return;
+                    }
+
+                    int dongia = Convert.ToInt32(tbxgiadichvu.Text); // Chuyển đổi kiểu dữ liệu của textbox giá dịch vụ sang int
                     if (dongia <= 0)
                     {
                         MessageBox.Show("Giá dịch vụ phải là số nguyên dương.");
@@ -218,14 +228,14 @@ namespace Quanlyphongkham
                     // Kiểm tra tên dịch vụ chỉ chứa tiếng Việt và dấu cách
                     string tenDichVu = tbxtendichvu.Text.Trim();
                     Regex regex = new Regex("^[\\p{L}\\s]+$");
-                    if (regex.IsMatch(tenDichVu))
+                    if (!regex.IsMatch(tenDichVu))
                     {
-                        MessageBox.Show("Tên dịch vụ không hợp lệ, vui lòng nhập lại chỉ chứa tiếng việt và dấu cách.");
+                        MessageBox.Show("Tên dịch vụ không hợp lệ, vui lòng nhập lại chỉ chứa tiếng Việt và dấu cách.");
                         tbxtendichvu.Focus();
                         return;
                     }
 
-                    dtdv.Rows.Add(tbxmadv.Text, tbxtendichvu.Text, tbxgiadichvu.Text); // đưa các dữ liệu vào bảng datatable tương ứng
+                    dtdv.Rows.Add(tbxmadv.Text, tbxtendichvu.Text, tbxgiadichvu.Text); // Đưa các dữ liệu vào bảng datatable tương ứng
                     tbxmadv.Text = "";
                     tbxtendichvu.Text = "";
                     tbxgiadichvu.Text = "";
@@ -255,6 +265,14 @@ namespace Quanlyphongkham
 
         private void btnsuadv_Click(object sender, EventArgs e)
         {
+            string maDichVu = tbxmadv.Text.Trim();
+            Regex maDichVuRegex = new Regex("^D\\d+$");
+            if (!maDichVuRegex.IsMatch(maDichVu))
+            {
+                MessageBox.Show("Mã dịch vụ không hợp lệ. Mã dịch vụ phải bắt đầu bằng chữ 'D' và theo sau là các số nguyên dương.");
+                tbxmadv.Focus();
+                return;
+            }
             // Kiểm tra tên dịch vụ chỉ chứa tiếng Việt và dấu cách
             string tenDichVu = tbxtendichvu.Text.Trim();
             Regex regex = new Regex("^[\\p{L}\\s]+$");
