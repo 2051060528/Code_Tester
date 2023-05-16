@@ -376,7 +376,7 @@ namespace Quanlyphongkham
                 if (!trungmanv)
                 {
                     // Kiểm tra độ dài và định dạng mã nhân viên
-                    if (tbxmanv.Text.Length > 0 && tbxmanv.Text.Length <= 5 && Regex.IsMatch(tbxmanv.Text, @"^[a-zA-Z0-9]+$"))
+                    if (tbxmanv.Text.Length == 5 && tbxmanv.Text.StartsWith("NV") && Regex.IsMatch(tbxmanv.Text, @"^[a-zA-Z0-9]+$"))
                     {
                         // Kiểm tra họ tên
                         tbxtennv.Text = tbxtennv.Text.Trim();
@@ -390,17 +390,25 @@ namespace Quanlyphongkham
                                     // Kiểm tra ngày sinh
                                     if (DateTime.TryParseExact(ngaysinhnv.Text, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime ngay))
                                     {
-                                        dtnv.Rows.Add(tbxmanv.Text, tbxtennv.Text, ngay.ToString("dd/MM/yyyy"), tbxsdtnv.Text, tbxdiachinv.Text);
-                                        tbxmanv.Text = "";
-                                        tbxtennv.Text = "";
-                                        ngaysinhnv.Text = "";
-                                        tbxsdtnv.Text = "";
-                                        tbxdiachinv.Text = "";
-                                        MessageBox.Show("Thêm thông tin thành công.");
+                                        if (ngay.Year >= 1963 && ngay.Year <= 2002)
+                                        {
+                                            dtnv.Rows.Add(tbxmanv.Text, tbxtennv.Text, ngay.ToString("dd/MM/yyyy"), tbxsdtnv.Text, tbxdiachinv.Text);
+                                            tbxmanv.Text = "";
+                                            tbxtennv.Text = "";
+                                            ngaysinhnv.Text = "";
+                                            tbxsdtnv.Text = "";
+                                            tbxdiachinv.Text = "";
+                                            MessageBox.Show("Thêm thông tin thành công.");
+                                        }
+                                        else
+                                        {
+                                            MessageBox.Show("Năm sinh không hợp lệ! Vui lòng chọn năm từ 1963 đến 2002.");
+                                            ngaysinhnv.Focus();
+                                        }
                                     }
                                     else
                                     {
-                                        MessageBox.Show("Định dạng ngày sinh không hợp lệ! Vui lòng nhập lại");
+                                        MessageBox.Show("Năm sinh không hợp lệ! Vui lòng chọn năm từ 1963 đến 2002.");
                                         ngaysinhnv.Focus();
                                     }
                                 }
@@ -423,7 +431,7 @@ namespace Quanlyphongkham
                     }
                     else
                     {
-                        MessageBox.Show("Mã nhân viên chỉ chứa tối đa 5 ký tự và không chứa ký tự ĐB");
+                        MessageBox.Show("Mã nhân viên không hợp lệ. Mã nhân viên phải có 5 ký tự và bắt đầu bằng 'NV'.");
                         tbxmabn.Focus();
                     }
                 }
@@ -441,45 +449,44 @@ namespace Quanlyphongkham
 
         private void btnsuanv_Click(object sender, EventArgs e)
         {
-            // sưa thông tin nhân viên
-            if (!Regex.IsMatch(tbxmanv.Text, @"^[a-zA-Z0-9]{1,5}$"))
+            // Sửa thông tin nhân viên
+            if (tbxmanv.Text.Length != 5 || !tbxmanv.Text.StartsWith("NV") || !Regex.IsMatch(tbxmanv.Text, @"^[a-zA-Z0-9]+$"))
             {
-                MessageBox.Show("Mã nhân viên không hợp lệ, vui lòng nhập lại! (Tối đa 5 ký tự, chỉ sử dụng chữ và số)");
+                MessageBox.Show("Mã nhân viên không hợp lệ, vui lòng nhập lại! (Tối đa 5 ký tự, bắt đầu bằng 'NV', chỉ sử dụng chữ và số)");
                 tbxmanv.Focus();
                 return;
             }
-            // Kiểm tra và thông báo lỗi nếu và tbxtenbn không phù hợp
-            if (!Regex.IsMatch(tbxtennv.Text, @"^[\p{L}\s]+$") && tbxtennv.Text != "")
+
+            // Kiểm tra và thông báo lỗi nếu tên nhân viên không phù hợp
+            if (!Regex.IsMatch(tbxtennv.Text, @"^[\p{L}\s]+$") || tbxtennv.Text == "")
             {
                 MessageBox.Show("Họ tên không hợp lệ, vui lòng nhập lại!");
                 tbxtenbn.Focus();
                 return;
             }
 
+            // Kiểm tra và thông báo lỗi nếu ngày sinh không hợp lệ
+            if (!DateTime.TryParseExact(ngaysinhnv.Text, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime ngay) || ngay.Year < 1963 || ngay.Year > 2002)
+            {
+                MessageBox.Show("Ngày sinh không hợp lệ! Vui lòng chọn dữ liệu theo định dạng dd/MM/yyyy (ngày/tháng/năm) và năm giới hạn trong khoảng từ 1963 đến 2002.");
+                ngaysinhnv.Focus();
+                return;
+            }
+
+            // Kiểm tra và thông báo lỗi nếu số điện thoại không hợp lệ
+            if (!int.TryParse(tbxsdtnv.Text, out int sdtnv) || tbxsdtnv.Text.Length != 10 || !tbxsdtnv.Text.StartsWith("0"))
+            {
+                MessageBox.Show("Số điện thoại không hợp lệ! Vui lòng kiểm tra lại.");
+                tbxsdtnv.Focus();
+                return;
+            }
+
+            // Cập nhật thông tin nhân viên
             datanhanvien.Rows[dongdangchonnv].Cells[0].Value = tbxmanv.Text;
             datanhanvien.Rows[dongdangchonnv].Cells[1].Value = tbxtennv.Text;
             datanhanvien.Rows[dongdangchonnv].Cells[2].Value = ngaysinhnv.Text;
             datanhanvien.Rows[dongdangchonnv].Cells[3].Value = tbxsdtnv.Text;
             datanhanvien.Rows[dongdangchonnv].Cells[4].Value = tbxdiachinv.Text;
-            if (DateTime.TryParseExact(ngaysinhnv.Text, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime ngay))
-            {
-                datanhanvien.Rows[dongdangchonnv].Cells[2].Value = ngay.ToString("dd/MM/yyyy");
-            }
-            else
-            {
-                MessageBox.Show("Định dạng ngày sinh không hợp lệ! Vui lòng nhập lại.");
-                ngaysinhnv.Focus();
-            }
-            int sdtnv;
-            if (int.TryParse(tbxsdtnv.Text, out sdtnv) && tbxsdtnv.Text.Length == 10 && tbxsdtnv.Text.StartsWith("0"))
-            {
-                datanhanvien.Rows[dongdangchonnv].Cells[3].Value = tbxsdtnv.Text;
-            }
-            else
-            {
-                MessageBox.Show("Vui kiểm tra lại SĐT!");
-                tbxsdtnv.Focus();
-            }
         }
 
         private void btnxoanv_Click(object sender, EventArgs e)
@@ -1225,10 +1232,13 @@ namespace Quanlyphongkham
         {
             MessageBox.Show("Hãy chắc chắn rằng toàn bộ dữ liệu bạn nhập đã bấm 'Lưu' nếu không dữ liệu sẽ mất đi!", "Thông báo");
             DialogResult traloi;
-            traloi = MessageBox.Show("Bạn vẫn muốn đăng xuất chứ?", "Trả lời",
-            MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
+            traloi = MessageBox.Show("Bạn vẫn muốn đăng xuất chứ?", "Trả lời", MessageBoxButtons.OKCancel, MessageBoxIcon.Question);
             if (traloi == DialogResult.OK)
-                Application.Exit();
+            {
+                this.Close(); // Đóng Form2
+                Form1 form1 = new Form1();
+                form1.Show(); // Hiển thị Form1
+            }
         }
     }
 }
