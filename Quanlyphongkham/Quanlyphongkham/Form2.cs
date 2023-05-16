@@ -666,7 +666,7 @@ namespace Quanlyphongkham
         private void btnsuabn_Click(object sender, EventArgs e)
         {
             tbxmabn.Enabled = false; // không cho phép sửa tbxmabn
-            // Kiểm tra và thông báo lỗi nếu và tbxtenbn không phù hợp
+                                     // Kiểm tra và thông báo lỗi nếu và tbxtenbn không phù hợp
             if (!Regex.IsMatch(tbxtenbn.Text, @"^[\p{L}\s]+$") && tbxtenbn.Text != "")
             {
                 MessageBox.Show("Tên bệnh nhân không hợp lệ, vui lòng nhập lại.");
@@ -706,6 +706,7 @@ namespace Quanlyphongkham
             {
                 MessageBox.Show("Thông tin Bảo hiểm không hợp lệ. Vui lòng nhập 'Có' hoặc 'Không'.");
                 BHYT.Focus();
+                return;
             }
 
             databenhnhan.Rows[dongdangchonkh].Cells[1].Value = tbxtenbn.Text;
