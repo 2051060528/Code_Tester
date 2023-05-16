@@ -553,7 +553,7 @@ namespace Quanlyphongkham
 
         private void btnthembn_Click(object sender, EventArgs e)
         {
-            if (tbxmabn.Text != "" && tbxtenbn.Text != "" && ngaysinhbn.Text != "" && tbxsdtbn.Text != "" && tbxdiachibn.Text != "")
+            if (tbxmabn.Text != "" && tbxtenbn.Text != "" && ngaysinhbn.Text != "" && tbxsdtbn.Text != "" && BHYT.Text != "")
             {
                 // Kiểm tra mã bệnh nhân duy nhất
                 bool trungmabn = false;
@@ -647,19 +647,19 @@ namespace Quanlyphongkham
                     }
                     else
                     {
-                        MessageBox.Show("Mã bệnh nhân phải là số nguyên dương và không bắt đầu bằng số 0.");
+                        MessageBox.Show("Mã bệnh nhân phải là số nguyên dương");
                         tbxmabn.Focus();
                     }
                 }
                 else
                 {
-                    MessageBox.Show("Mã bệnh nhân đã tồn tại, vui lòng nhập mã khác.");
+                    MessageBox.Show("Mã bệnh nhân đã tồn tại");
                     tbxmabn.Focus();
                 }
             }
             else
             {
-                MessageBox.Show("Vui lòng nhập đầy đủ thông tin bệnh nhân.");
+                MessageBox.Show("Vui lòng nhập đầy đủ thông tin bệnh nhân");
             }
         }
 
