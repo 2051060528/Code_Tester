@@ -939,6 +939,7 @@
             // 
             // btnthanhtoan
             // 
+            this.btnthanhtoan.Enabled = false;
             this.btnthanhtoan.Location = new System.Drawing.Point(96, 162);
             this.btnthanhtoan.Name = "btnthanhtoan";
             this.btnthanhtoan.Size = new System.Drawing.Size(129, 38);

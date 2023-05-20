@@ -861,6 +861,7 @@ namespace Quanlyphongkham
             tbxdongia.Text = "";
             combobaohiem.Enabled = false;
             MessageBox.Show("Thêm thành công");
+            btnthanhtoan.Enabled=true;
         }
 
         private void btnsua_Click(object sender, EventArgs e)
@@ -870,6 +871,14 @@ namespace Quanlyphongkham
             datasokham.Rows[dongdangchonpk].Cells[4].Value = combodichvu.Text;
             datasokham.Rows[dongdangchonpk].Cells[5].Value = combonhanvien.Text;
             datasokham.Rows[dongdangchonpk].Cells[6].Value = tbxdongia.Text;
+            if (datasokham.RowCount > 0)
+            {
+                btnthanhtoan.Enabled = true;
+            }
+            else
+            {
+                btnthanhtoan.Enabled = false;
+            }
         }
 
         private void btnxoa_Click(object sender, EventArgs e)
@@ -883,6 +892,14 @@ namespace Quanlyphongkham
                 combonhanvien.Text = null;
                 combobaohiem.Text = null;
                 MessageBox.Show("Xóa thành công!");
+            }
+            if (datasokham.RowCount > 0)
+            {
+                btnthanhtoan.Enabled = true;
+            }
+            else
+            {
+                btnthanhtoan.Enabled = false;
             }
         }
 
@@ -954,7 +971,7 @@ namespace Quanlyphongkham
             combonhanvien.Enabled = true;
             combobaohiem.Text = null;
             combobaohiem.Enabled = true;
-            btnthanhtoan.Enabled = true;
+            btnthanhtoan.Enabled = false;
             btnthem.Enabled = true;
             btnsua.Enabled = true;
             btnxoa.Enabled = true;
