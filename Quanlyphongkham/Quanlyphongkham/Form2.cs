@@ -667,7 +667,7 @@ namespace Quanlyphongkham
         {
             tbxmabn.Enabled = false; // không cho phép sửa tbxmabn
                                      // Kiểm tra và thông báo lỗi nếu và tbxtenbn không phù hợp
-            if (!Regex.IsMatch(tbxtenbn.Text, @"^[\p{L}\s]+$") && tbxtenbn.Text != "")
+            if (tbxtenbn.Text.Trim() == "" || !Regex.IsMatch(tbxtenbn.Text, @"^[\p{L}\s]+$"))
             {
                 MessageBox.Show("Tên bệnh nhân không hợp lệ, vui lòng nhập lại.");
                 tbxtenbn.Focus();
